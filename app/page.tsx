@@ -1,10 +1,16 @@
-import React from "react";
+import Header from "@/components/landing/header";
+import Hero from "@/components/landing/hero";
+import Features from "@/components/landing/features";
+import Footer from "@/components/landing/footer";
 
 export default function Page() {
   return (
     <>
-      <div>
-        <h1 className="text-4xl font-bold">Roamly</h1>
+      <div className="min-h-screen bg-background">
+        <Header />
+        <Hero />
+        <Features />
+        <Footer />
       </div>
     </>
   );
