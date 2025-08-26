@@ -20,7 +20,7 @@ export default function Header() {
               />
               <span className="text-2xl font-bold font-serif">Roamly</span>
             </div>
-            <Link href="/signup">
+            <Link href="/sign-up">
               <Button className="font-medium">Get Started</Button>
             </Link>
           </nav>
