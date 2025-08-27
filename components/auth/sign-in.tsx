@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 interface SignInProps {
   email: string;
@@ -76,10 +77,16 @@ export default function SignIn({
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <div className="flex items-center justify-between ">
+            <div className="flex items-center justify-between flex-col gap-2">
               <Button type="submit" className="w-full mt-4 cursor-pointer">
                 Sign in
               </Button>
+              <p className="text-sm text-muted-foreground text-center">
+                Don't have an account?{" "}
+                <Link href="/sign-up" className="text-primary">
+                  Sign up
+                </Link>
+              </p>
             </div>
           </form>
         </div>

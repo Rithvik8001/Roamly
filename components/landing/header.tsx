@@ -3,8 +3,14 @@ import logo from "@/public/assets/logo.png";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { auth } from "@/app/utils/auth";
+import { headers } from "next/headers";
 
-export default function Header() {
+export default async function Header() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   return (
     <>
       <div className="border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
@@ -20,9 +26,19 @@ export default function Header() {
               />
               <span className="text-2xl font-bold font-serif">Roamly</span>
             </div>
-            <Link href="/sign-up">
-              <Button className="font-medium">Get Started</Button>
-            </Link>
+            {session ? (
+              <Link href="/dashboard">
+                <Button className="font-medium cursor-pointer">
+                  Dashboard
+                </Button>
+              </Link>
+            ) : (
+              <Link href="/sign-up">
+                <Button className="font-medium cursor-pointer">
+                  Get Started
+                </Button>
+              </Link>
+            )}
           </nav>
         </div>
       </div>

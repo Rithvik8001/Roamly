@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { auth } from "../utils/auth";
 import { headers } from "next/headers";
 
@@ -7,14 +6,11 @@ export default async function DashboardPage() {
     headers: await headers(),
   });
 
-  if (!session) {
-    redirect("/sign-in");
-  }
-
+  const { user } = session!;
   return (
     <div>
-      <h1>{session.user?.name}</h1>
-      <p>{}</p>
+      <h1>{user.name}</h1>
+      <p>{user.email}</p>
     </div>
   );
 }

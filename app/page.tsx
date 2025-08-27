@@ -3,7 +3,7 @@ import Hero from "@/components/landing/hero";
 import Features from "@/components/landing/features";
 import Footer from "@/components/landing/footer";
 
-export default function Page() {
+export default async function Page() {
   return (
     <>
       <div className="min-h-screen bg-background">

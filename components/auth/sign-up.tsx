@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 interface SignUpProps {
   email: string;
@@ -87,10 +88,16 @@ export default function SignUp({
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <div className="flex items-center justify-between ">
+            <div className="flex items-center justify-between flex-col gap-2">
               <Button type="submit" className="w-full mt-4 cursor-pointer">
                 Create account
               </Button>
+              <p className="text-sm text-muted-foreground text-center">
+                Already have an account?{" "}
+                <Link href="/sign-in" className="text-primary">
+                  Sign in
+                </Link>
+              </p>
             </div>
           </form>
         </div>
