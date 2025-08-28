@@ -4,6 +4,7 @@ import { useState } from "react";
 import { authClient } from "@/app/utils/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { signUpSchema } from "@/app/utils/validation";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState<string>("");
@@ -11,9 +12,22 @@ export default function SignUpPage() {
   const router = useRouter();
 
   const handleEmailSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const validationResult = signUpSchema.safeParse({ email, password });
+
+    if (!validationResult.success) {
+      const errors = validationResult.error.issues;
+      toast.error(errors[0].message, {
+        description: errors.map((err: any) => err.message).join(", "),
+        duration: 1000,
+        className: "bg-primary text-black",
+      });
+      return;
+    }
+
     try {
-      e.preventDefault();
-      const { data, error } = await authClient.signUp.email(
+      await authClient.signUp.email(
         {
           email,
           password,
@@ -22,16 +36,26 @@ export default function SignUpPage() {
         },
         {
           onSuccess: () => {
-            toast.success("Account created successfully");
+            toast.success("Account created successfully", {
+              className: "bg-primary text-black",
+            });
             router.push("/sign-in");
           },
           onError: (error: any) => {
-            toast.error(error.message);
+            toast.error(error.message, {
+              description: error.message,
+              duration: 1000,
+              className: "bg-primary text-black",
+            });
           },
         }
       );
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message, {
+        description: error.message,
+        duration: 1000,
+        className: "bg-primary text-black",
+      });
     }
   };
 
@@ -43,7 +67,11 @@ export default function SignUpPage() {
         errorCallbackURL: "/sign-up?error=oauth_error",
       });
     } catch (error: any) {
-      toast.error(`Failed to sign in with ${provider}`);
+      toast.error(`Failed to sign in with ${provider}`, {
+        description: `Failed to sign in with ${provider}`,
+        duration: 1000,
+        className: "bg-primary text-black",
+      });
     }
   };
 

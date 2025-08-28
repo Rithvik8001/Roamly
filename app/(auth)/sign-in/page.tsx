@@ -4,6 +4,7 @@ import SignIn from "@/components/auth/sign-in";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { signInSchema } from "@/app/utils/validation";
 
 export default function SignInPage() {
   const [email, setEmail] = useState<string>("");
@@ -11,9 +12,22 @@ export default function SignInPage() {
   const router = useRouter();
 
   const handleEmailSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const validationResult = signInSchema.safeParse({ email, password });
+
+    if (!validationResult.success) {
+      const errors = validationResult.error.issues;
+      toast.error(errors[0].message, {
+        description: errors.map((err: any) => err.message).join(", "),
+        duration: 1000,
+        className: "bg-primary text-black",
+      });
+      return;
+    }
+
     try {
-      e.preventDefault();
-      const { data, error } = await authClient.signIn.email(
+      await authClient.signIn.email(
         {
           email,
           password,
@@ -21,16 +35,26 @@ export default function SignInPage() {
         },
         {
           onSuccess: () => {
-            toast.success("Signed in successfully");
+            toast.success("Signed in successfully", {
+              className: "bg-primary text-black",
+            });
             router.push("/dashboard");
           },
           onError: (error: any) => {
-            toast.error(error.message);
+            toast.error(error.message, {
+              description: error.message,
+              duration: 1000,
+              className: "bg-primary text-black",
+            });
           },
         }
       );
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message, {
+        description: error.message,
+        duration: 1000,
+        className: "bg-primary text-black",
+      });
     }
   };
   const handleOAuthSignIn = async (provider: "github") => {
@@ -41,9 +65,14 @@ export default function SignInPage() {
         errorCallbackURL: "/sign-up?error=oauth_error",
       });
     } catch (error: any) {
-      toast.error(`Failed to sign in with ${provider}`);
+      toast.error(`Failed to sign in with ${provider}`, {
+        description: `Failed to sign in with ${provider}`,
+        duration: 1000,
+        className: "bg-primary text-black",
+      });
     }
   };
+
   return (
     <>
       <SignIn
