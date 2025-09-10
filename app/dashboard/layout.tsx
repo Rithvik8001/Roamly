@@ -12,7 +12,7 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { HomeIcon, LogOutIcon, Plane } from "lucide-react";
+import { HomeIcon, LogOutIcon, Plane, User } from "lucide-react";
 import Image from "next/image";
 
 async function handleSignOut() {
@@ -71,6 +71,15 @@ export default async function DashboardLayout({
                 >
                   <Plane size={20} />
                   <span>Itineraries</span>
+                </a>
+              </SidebarMenuButton>
+              <SidebarMenuButton asChild>
+                <a
+                  href="/dashboard/profile"
+                  className="flex items-center gap-3 hover:bg-primary hover:text-white rounded-md transition-all ease-in-out duration-500"
+                >
+                  <User size={20} />
+                  <span>Profile</span>
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
