@@ -3,12 +3,12 @@ import type { NextRequest } from "next/server";
 import { auth } from "@/app/utils/auth";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(
+export const GET = async (
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string }> }
+) => {
   try {
-    const { id } = await params;
+    const { id } = await context.params;
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -48,14 +48,14 @@ export async function GET(
       headers: { "Content-Type": "application/json" },
     });
   }
-}
+};
 
-export async function DELETE(
+export const DELETE = async (
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string }> }
+) => {
   try {
-    const { id } = await params;
+    const { id } = await context.params;
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -83,14 +83,14 @@ export async function DELETE(
       headers: { "Content-Type": "application/json" },
     });
   }
-}
+};
 
-export async function PATCH(
+export const PATCH = async (
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string }> }
+) => {
   try {
-    const { id } = await params;
+    const { id } = await context.params;
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -128,4 +128,4 @@ export async function PATCH(
       headers: { "Content-Type": "application/json" },
     });
   }
-}
+};
