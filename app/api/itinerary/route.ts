@@ -1,5 +1,6 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { streamText } from "ai";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const openai = createOpenAI({
   apiKey: process.env.PPLX_API_KEY,
@@ -8,6 +9,23 @@ const openai = createOpenAI({
 
 export async function POST(request: Request) {
   try {
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      request.headers.get("x-real-ip") ||
+      "unknown";
+    const rl = checkRateLimit(`itinerary:${ip}`, 60_000, 8);
+    if (!rl.allowed) {
+      return new Response(
+        JSON.stringify({ error: "Too many requests. Please wait a moment." }),
+        {
+          status: 429,
+          headers: {
+            "Content-Type": "application/json",
+            "Retry-After": Math.ceil(rl.resetMs / 1000).toString(),
+          },
+        }
+      );
+    }
     if (!process.env.PPLX_API_KEY || !process.env.PPLX_BASE_URL) {
       return new Response(
         JSON.stringify({
@@ -46,6 +64,9 @@ export async function POST(request: Request) {
         },
         { role: "user", content: prompt },
       ],
+      // limit output size to control costs
+      // @ts-expect-error supported by provider although not in base type
+      maxTokens: 900,
       providerOptions: {
         openai: {
           extraBody: { return_images: true, search_mode: "web" },
