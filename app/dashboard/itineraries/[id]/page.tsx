@@ -1,6 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Button } from "@/components/ui/button";
+import DeleteItineraryButton from "@/components/itineraries/delete-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
@@ -51,13 +52,16 @@ export default async function ItineraryDetailPage({
 
   return (
     <div className="p-4">
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-3 gap-2">
         <h1 className="text-xl font-semibold truncate">{data.title}</h1>
-        <Link href="/dashboard/itineraries">
-          <Button className="cursor-pointer" variant="secondary">
-            Back
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <DeleteItineraryButton id={data.id} title={data.title} />
+          <Link href="/dashboard/itineraries">
+            <Button className="cursor-pointer" variant="secondary">
+              Back
+            </Button>
+          </Link>
+        </div>
       </div>
       <Card>
         <CardContent className="p-4">
