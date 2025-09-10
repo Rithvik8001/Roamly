@@ -120,6 +120,7 @@ export default function Itinerary() {
                         const res = await fetch("/api/itineraries", {
                           method: "POST",
                           headers: { "Content-Type": "application/json" },
+                          credentials: "include",
                           body: JSON.stringify({
                             title: input?.slice(0, 80) || "Untitled",
                             prompt: input,
@@ -127,10 +128,19 @@ export default function Itinerary() {
                             model: "sonar-pro",
                           }),
                         });
-                        if (!res.ok) throw new Error("Failed to save");
+                        if (!res.ok) {
+                          const err = await res
+                            .json()
+                            .catch(() => ({ error: "Failed to save" }));
+                          throw new Error(err.error || "Failed to save");
+                        }
                         toast.success("Itinerary saved");
                       } catch (e) {
-                        toast.error("Failed to save itinerary");
+                        const msg =
+                          e instanceof Error
+                            ? e.message
+                            : "Failed to save itinerary";
+                        toast.error(msg);
                       }
                     }}
                   >
