@@ -66,7 +66,7 @@ export default async function DashboardLayout({
               </SidebarMenuButton>
               <SidebarMenuButton asChild>
                 <a
-                  href="/dashboard/itenaries"
+                  href="/dashboard/itineraries"
                   className="flex items-center gap-3 hover:bg-primary hover:text-white rounded-md transition-all ease-in-out duration-500"
                 >
                   <Plane size={20} />

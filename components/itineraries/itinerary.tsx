@@ -12,7 +12,7 @@ import { ClipboardCopy, Check, Compass, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 
-export default function Itenary() {
+export default function Itinerary() {
   const {
     completion,
     isLoading,
@@ -21,7 +21,7 @@ export default function Itenary() {
     input,
     handleInputChange,
   } = useCompletion({
-    api: "/api/itenary",
+    api: "/api/itinerary",
     streamProtocol: "text",
   });
 
@@ -109,6 +109,32 @@ export default function Itenary() {
                         <ClipboardCopy className="h-4 w-4 mr-1" /> Copy
                       </>
                     )}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    className="cursor-pointer"
+                    disabled={!completion?.trim()}
+                    onClick={async () => {
+                      try {
+                        const res = await fetch("/api/itineraries", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            title: input?.slice(0, 80) || "Untitled",
+                            prompt: input,
+                            content: completion,
+                            model: "sonar-pro",
+                          }),
+                        });
+                        if (!res.ok) throw new Error("Failed to save");
+                        toast.success("Itinerary saved");
+                      } catch (e) {
+                        toast.error("Failed to save itinerary");
+                      }
+                    }}
+                  >
+                    Save
                   </Button>
                 </div>
               </div>

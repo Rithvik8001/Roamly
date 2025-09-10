@@ -19,6 +19,7 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  itineraries   Itinerary[]
   @@unique([email])
   @@map("user")
 }
@@ -63,4 +64,18 @@ model Verification {
   createdAt  DateTime?
   updatedAt  DateTime?
   @@map("verification")
+}
+
+model Itinerary {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  prompt    String
+  content   String
+  model     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("itinerary")
 }
