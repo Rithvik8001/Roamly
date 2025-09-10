@@ -41,10 +41,10 @@ export default function Itinerary() {
 
   return (
     <>
-      <div className="min-h-[90vh] p-4 flex items-start justify-center">
+      <div className="min-h-[90vh] px-2 py-4 flex items-start justify-center">
         <div className="w-full max-w-3xl mx-auto relative">
           <form
-            className="mx-4 sm:mx-0 sm:m-4 space-y-3"
+            className="mx-2 sm:mx-0 sm:m-4 space-y-3"
             onSubmit={(e) => {
               e.preventDefault();
               if (!input.trim() || isLoading) return;
@@ -52,9 +52,11 @@ export default function Itinerary() {
             }}
           >
             <div className="rounded-md bg-primary/15 text-primary px-3 py-2 text-xs sm:text-sm font-medium">
-              Enter travel plan info: city, country, budget, etc.
+              Describe your trip: destination, dates/duration, budget,
+              travelers, and interests. Example: "Paris, France • Oct 3–7 • 5
+              days • $1500 • 2 adults • museums & food"
             </div>
-            <div className="grid gap-2 sm:gap-3 sm:grid-cols-[1fr_auto] sm:items-stretch">
+            <div className="grid gap-2 sm:gap-3 grid-cols-1 sm:grid-cols-[1fr_auto] sm:items-stretch">
               <Input
                 name="prompt"
                 value={input}
@@ -73,7 +75,7 @@ export default function Itinerary() {
           </form>
 
           {!completion && !isLoading && !error && (
-            <div className="mx-4 mt-4 sm:mx-0 sm:m-4 border border-dashed rounded-lg p-6 sm:p-8 text-center text-muted-foreground">
+            <div className="mx-2 mt-4 sm:mx-0 sm:m-4 border border-dashed rounded-lg p-6 sm:p-8 text-center text-muted-foreground">
               <div className="flex items-center justify-center mb-2">
                 <Compass className="h-6 w-6" />
               </div>
@@ -85,9 +87,9 @@ export default function Itinerary() {
           )}
 
           {(isLoading || completion || error) && (
-            <Card className="mx-4 mt-4 sm:mx-0 sm:m-4 border-primary/20 shadow-sm rounded-xl">
-              <div className="flex items-center justify-between px-4 pt-4">
-                <h3 className="text-lg font-medium flex items-center gap-2">
+            <Card className="mx-2 mt-4 sm:mx-0 sm:m-4 border-primary/20 shadow-sm rounded-xl">
+              <div className="flex items-center justify-between px-2 py-1">
+                <h3 className="text-sm sm:text-base font-medium leading-tight my-0 flex items-center gap-2">
                   {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}{" "}
                   Generated Itinerary
                 </h3>
@@ -96,7 +98,7 @@ export default function Itinerary() {
                     type="button"
                     variant="secondary"
                     size="sm"
-                    className="cursor-pointer"
+                    className="cursor-pointer min-w-[80px]"
                     onClick={handleCopy}
                     disabled={!completion?.trim()}
                   >
@@ -113,7 +115,7 @@ export default function Itinerary() {
                   <Button
                     type="button"
                     size="sm"
-                    className="cursor-pointer"
+                    className="cursor-pointer min-w-[80px]"
                     disabled={!completion?.trim()}
                     onClick={async () => {
                       try {
@@ -125,7 +127,7 @@ export default function Itinerary() {
                             title: input?.slice(0, 80) || "Untitled",
                             prompt: input,
                             content: completion,
-                            model: "sonar-pro",
+                            model: "sonar",
                           }),
                         });
                         if (!res.ok) {
@@ -148,7 +150,7 @@ export default function Itinerary() {
                   </Button>
                 </div>
               </div>
-              <Separator className="my-3" />
+              <Separator className="my-1" />
               <CardContent className="p-0">
                 {error ? (
                   <div className="p-4 text-red-600">
@@ -156,24 +158,63 @@ export default function Itinerary() {
                     again.
                   </div>
                 ) : (
-                  <ScrollArea className="h-[58vh] sm:h-[60vh] md:h-[65vh]">
-                    <div className="p-4">
+                  <ScrollArea className="h-[54vh] sm:h-[58vh] md:h-[62vh]">
+                    <div className="px-3 py-3">
                       {completion ? (
-                        <ReactMarkdown
-                          remarkPlugins={[remarkGfm]}
-                          components={{
-                            img: (props) => (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                {...props}
-                                className="rounded-lg border mt-2 mb-4 max-h-64 sm:max-h-80 w-full object-cover"
-                                alt={props.alt ?? ""}
-                              />
-                            ),
-                          }}
-                        >
-                          {completion}
-                        </ReactMarkdown>
+                        <div className="prose prose-sm sm:prose dark:prose-invert max-w-none break-words">
+                          <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                              img: (props) => (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                  {...props}
+                                  className="rounded-lg border mt-2 mb-4 max-h-64 sm:max-h-80 w-full object-cover"
+                                  alt={props.alt ?? ""}
+                                />
+                              ),
+                              table: ({ children }) => (
+                                <table className="w-full table-fixed border-collapse">
+                                  {children}
+                                </table>
+                              ),
+                              th: ({ children }) => (
+                                <th className="text-left align-top p-2 border-b">
+                                  {children}
+                                </th>
+                              ),
+                              td: ({ children }) => (
+                                <td className="align-top p-2 border-b/0">
+                                  {children}
+                                </td>
+                              ),
+                              tr: ({ children }) => (
+                                <tr className="align-top">{children}</tr>
+                              ),
+                              ul: ({ children }) => (
+                                <ul className="pl-5">{children}</ul>
+                              ),
+                              ol: ({ children }) => (
+                                <ol className="pl-5">{children}</ol>
+                              ),
+                              p: ({ children }) => (
+                                <p className="my-2">{children}</p>
+                              ),
+                              h2: ({ children }) => (
+                                <h2 className="text-base sm:text-lg mt-3 mb-2">
+                                  {children}
+                                </h2>
+                              ),
+                              h3: ({ children }) => (
+                                <h3 className="text-sm sm:text-base mt-3 mb-1">
+                                  {children}
+                                </h3>
+                              ),
+                            }}
+                          >
+                            {completion}
+                          </ReactMarkdown>
+                        </div>
                       ) : (
                         <p className="text-sm text-muted-foreground">
                           Preparing your itinerary...

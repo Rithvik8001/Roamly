@@ -16,6 +16,11 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: "Roamly",
   description: "Roamly is an AI powered itinerary planner for travel.",
+  icons: {
+    icon: "/assets/logo.png",
+    shortcut: "/assets/logo.png",
+    apple: "/assets/logo.png",
+  },
 };
 
 export default function RootLayout({

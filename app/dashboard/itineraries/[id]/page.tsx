@@ -6,6 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { headers } from "next/headers";
+import ItineraryReader from "@/components/itineraries/reader";
+import TitleEdit from "@/components/itineraries/title-edit";
 
 export default async function ItineraryDetailPage({
   params,
@@ -55,6 +57,7 @@ export default async function ItineraryDetailPage({
       <div className="flex items-center justify-between mb-3 gap-2">
         <h1 className="text-xl font-semibold truncate">{data.title}</h1>
         <div className="flex items-center gap-2">
+          <TitleEdit id={data.id} initialTitle={data.title} />
           <DeleteItineraryButton id={data.id} title={data.title} />
           <Link href="/dashboard/itineraries">
             <Button className="cursor-pointer" variant="secondary">
@@ -70,11 +73,7 @@ export default async function ItineraryDetailPage({
             {data.model ? `• ${data.model}` : ""}
           </div>
           <Separator className="my-3" />
-          <div className="prose dark:prose-invert max-w-none">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {data.content}
-            </ReactMarkdown>
-          </div>
+          <ItineraryReader content={data.content} />
         </CardContent>
       </Card>
     </div>

@@ -33,15 +33,16 @@ export async function POST(request: Request) {
       - Overview: trip summary and key tips
       - Day-by-day plan: bullets per day (morning/afternoon/evening)
       - Budget notes: rough ranges and savings tips
-      - Logistics: transport and neighborhood suggestions`;
+      - Logistics: transport and neighborhood suggestions
+      - Add more and more meaningful emojis to make the response more engaging and fun.`;
 
     const result = await streamText({
-      model: openai.chat("sonar-pro"),
+      model: openai.chat("sonar"),
       messages: [
         {
           role: "system",
           content:
-            "You are an expert travel planner. Only answer travel-related queries (destinations, itineraries, logistics, budgets, activities, seasons). If the request is not related to travel, reply exactly: 'I can't answer that—this assistant only handles travel planning.' Keep answers concise and highly actionable.",
+            "You are an expert travel planner. Only answer travel-related queries (destinations, itineraries, logistics, budgets, activities, seasons). If the request is not related to travel, reply exactly: 'I can't answer that—this assistant only handles travel planning.' Keep answers concise and highly actionable. Add more and more meaningful emojis to make the response more engaging and fun.",
         },
         { role: "user", content: prompt },
       ],
