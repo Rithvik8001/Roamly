@@ -1,12 +1,14 @@
 import { headers } from "next/headers";
+import type { NextRequest } from "next/server";
 import { auth } from "@/app/utils/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
-  _req: Request,
-  { params }: { params: { id: string } }
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -16,7 +18,7 @@ export async function GET(
     }
 
     const item = await prisma.itinerary.findFirst({
-      where: { id: params.id, userId: session.user.id },
+      where: { id, userId: session.user.id },
       select: {
         id: true,
         title: true,
@@ -49,10 +51,11 @@ export async function GET(
 }
 
 export async function DELETE(
-  _req: Request,
-  { params }: { params: { id: string } }
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -62,7 +65,7 @@ export async function DELETE(
     }
 
     const result = await prisma.itinerary.deleteMany({
-      where: { id: params.id, userId: session.user.id },
+      where: { id, userId: session.user.id },
     });
 
     if (result.count === 0) {
@@ -83,10 +86,11 @@ export async function DELETE(
 }
 
 export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -105,7 +109,7 @@ export async function PATCH(
     }
 
     const updated = await prisma.itinerary.updateMany({
-      where: { id: params.id, userId: session.user.id },
+      where: { id, userId: session.user.id },
       data: { title: title.slice(0, 140) },
     });
 
