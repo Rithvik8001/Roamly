@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --turbopack",
+    "prisma:generate": "prisma generate",
+    "build": "prisma generate && next build --turbopack",
     "start": "next start"
   },
   "dependencies": {
